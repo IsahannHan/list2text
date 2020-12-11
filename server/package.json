@@ -1,7 +1,7 @@
 {
-  "name": "webapp",
+  "name": "server",
   "version": "1.0.0",
-  "description": "Webapp for the USDF-ZSDF generator",
+  "description": "Server for the USDF-ZSDF generator",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
