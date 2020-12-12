@@ -1,4 +1,4 @@
-const ItemAmountBase = require('../../commons/model/itemamountbase');
+const ItemAmountBase = require('../../commons/model/ItemAmountBase');
 
 class Cost extends ItemAmountBase {
   constructor(item, amount) {

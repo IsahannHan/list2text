@@ -1,4 +1,4 @@
-const Element = require('../../commons/model/element')
+const Element = require('../../commons/model/Element')
 
 class Choice extends Element {
   constructor(text, cost, displaycost, yesmessage, nomessage, log, giveitem, special, arg0, arg1, arg2, arg3, arg4, nextpage, closedialog) {

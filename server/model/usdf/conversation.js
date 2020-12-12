@@ -1,4 +1,4 @@
-const Element = require('../../commons/model/element')
+const Element = require('../../commons/model/Element')
 
 class Conversation extends Element {
   constructor(actor, page, tabs) {

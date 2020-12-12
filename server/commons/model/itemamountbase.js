@@ -1,4 +1,4 @@
-const Element = require('../../commons/model/element')
+const Element = require('./Element')
 
 class ItemAmountBase extends Element{
   constructor(item, amount, title) {

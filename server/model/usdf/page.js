@@ -1,4 +1,4 @@
-const Element = require('../../commons/model/element')
+const Element = require('../../commons/model/Element')
 
 class Page extends Element {
   constructor(name, panel, voice, dialog, drop, link, ifitem, choice) {

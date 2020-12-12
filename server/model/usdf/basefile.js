@@ -1,5 +1,4 @@
-const Element = require('../../commons/model/element')
-const Conversation = require('../../model/usdf/conversation')
+const Element = require('../../commons/model/Element')
 class BaseFile extends Element {
   constructor(namespace, include, conversation) {
     super('');
