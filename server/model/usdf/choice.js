@@ -20,8 +20,9 @@ class Choice extends Element {
     this.closedialog = closedialog;    
   }
 
-  tag() {
+  tag(tabs) {
     return super.tag(
+      { value: tabs, tag: 'TABS' },
       { value: this.text, tag: 'text' },
       this.cost,
       { value: this.displaycost, tag: 'displaycost' },

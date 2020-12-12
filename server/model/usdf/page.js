@@ -13,8 +13,9 @@ class Page extends Element {
     this.choice = choice;
   }
 
-  tag() {
+  tag(tabs) {
     return super.tag(
+      { value: tabs, tag: 'TABS' },
       { value: this.name, tag: 'name' },
       { value: this.panel, tag: 'panel' },
       { value: this.voice, tag: 'voice' },
