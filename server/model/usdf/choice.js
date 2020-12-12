@@ -21,7 +21,7 @@ class Choice extends Element {
   }
 
   tag() {
-    super.tag(
+    return super.tag(
       { value: this.text, tag: 'text' },
       this.cost,
       { value: this.displaycost, tag: 'displaycost' },

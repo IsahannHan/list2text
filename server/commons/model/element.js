@@ -1,25 +1,48 @@
 class Element {
-    constructor (title) {
+    constructor(title) {
         this.title = title;
+        this.tabs = 0;
     }
 
-    tag(...params){
-        console.log(`Title: ${this.title}`);
+    tag(...params) {
+		let title = this.title;
+        let startingBracket = title === '' ? '' : getBracket(this.tabs, true);
+        let endingBracket = title === '' ? '' : getBracket(this.tabs, false);
 
-        params.forEach(item => createTag(item));
+        let result = title + startingBracket;
 
-        console.log('terminou');
+        params.forEach((item) => (result += createTag(item)));
+
+        result += endingBracket;
+
+        return result;
     }
 }
 
 function createTag(item) {
-    if(item instanceof Element){
-        console.log('element')
-        console.log(item.tag())
+    if (!item) return '';
+
+    if (item instanceof Element) {
+        return item.tag();
     } else {
-        console.log('simple item')
-        console.log(`ITEM: ${item.value} TAG: ${item.tag} TYPE: ${typeof item}`)
+        switch (typeof item.value) {
+            case 'number':
+            case 'boolean':
+                return `${getTabs(this.tabs++)}${item.tag} = ${item.value}; \n`;
+            case 'string':
+                return `${getTabs(this.tabs++)}${item.tag} = "${item.value}"; \n`;
+            default:
+                return '';
+        }
     }
+}
+
+function getTabs(tabs){
+	return '\t'.repeat(tabs);
+}
+
+function getBracket(tabs, opening) {
+	return  getTabs(tabs) + `\n${opening ? '{' : '}' }\n`
 }
 
 module.exports = Element;

@@ -8,7 +8,7 @@ class ItemAmountBase extends Element{
     }
 
   tag() {
-    super.tag(
+    return super.tag(
       { value: this.item, tag: 'item' },
       { value: this.amount, tag: 'amount' },
     );

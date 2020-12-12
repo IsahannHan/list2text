@@ -14,7 +14,7 @@ class Page extends Element {
   }
 
   tag() {
-    super.tag(
+    return super.tag(
       { value: this.name, tag: 'name' },
       { value: this.panel, tag: 'panel' },
       { value: this.voice, tag: 'voice' },
