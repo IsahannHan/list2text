@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Server for the USDF-ZSDF generator",
   "main": "index.js",
   "scripts": {
