@@ -22,120 +22,91 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Element from '../../commons/model/element';
-import BaseFile from '../../model/usdf/basefile';
-import Conversation from '../../model/usdf/conversation';
 
-function ElementList() {
+export default function ElementList(props) {
     const [open, setOpen] = React.useState(true);
-
-    let baseFile = new BaseFile(
-        'teste',
-        'bananinha',
-        new Conversation('joãozin', 'retarda', 5)
-    );
 
     const handleClick = () => {
         setOpen(!open);
     };
 
-    function createComplexItem(element) {
+    function createItem(element) {
         return (
-            <ListItem button onClick={handleClick}>
-                {open ? (
-                    <IconButton edge="start">
-                        <ExpandLessIcon fontSize="small" />
-                    </IconButton>
-                ) : (
-                    <IconButton onClick={handleClick} edge="start">
-                        <ExpandMoreIcon fontSize="small" />
-                    </IconButton>
-                )}
-                <ListItemText primary={element.title} />
-                <ListItemSecondaryAction>
-                    <IconButton edge="end">
-                        <AddBoxOutlinedIcon
-                            fontSize="small"
-                            style={{ color: green[500] }}
-                        />
-                    </IconButton>
-                    <IconButton edge="end">
-                        <EditOutlinedIcon
-                            fontSize="small"
-                            style={{ color: blue[300] }}
-                        />
-                    </IconButton>
-                    <IconButton edge="end">
-                        <DeleteOutlinedIcon
-                            fontSize="small"
-                            style={{ color: red[300] }}
-                        />
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="nav" disablePadding>
-                <ListItem button>
-                    <ListItemText primary="ALOO"/>
+            <>
+                <ListItem button onClick={handleClick}>
+                    {generateExpand(element)}
+                    <ListItemText
+                        primary={element.title + ' ' + element.value}
+                    />
+                    <ListItemSecondaryAction>
+                        <IconButton edge="end">
+                            <AddBoxOutlinedIcon
+                                fontSize="small"
+                                style={{ color: green[500] }}
+                            />
+                        </IconButton>
+                        <IconButton edge="end">
+                            <EditOutlinedIcon
+                                fontSize="small"
+                                style={{ color: blue[300] }}
+                            />
+                        </IconButton>
+                        <IconButton edge="end">
+                            <DeleteOutlinedIcon
+                                fontSize="small"
+                                style={{ color: red[300] }}
+                            />
+                        </IconButton>
+                    </ListItemSecondaryAction>
                 </ListItem>
-                <ListItem button>
-                    <ListItemText primary="XOXOXO"/>
-                </ListItem>
-                {/* {Object.keys(element).forEach(prop => generateElements(prop, element[prop]))} */}
-            </List>
-        </Collapse>
+                {generateCollapse(element)}
+            </>
         );
     }
 
-    function createSimpleItem (element, value) {
-        return (
-            <ListItem button>
-                <ListItemText primary={element + value} />
-                <ListItemSecondaryAction>
-                    <IconButton edge="end">
-                        <AddBoxOutlinedIcon
-                            fontSize="small"
-                            style={{ color: green[500] }}
-                        />
-                    </IconButton>
-                    <IconButton edge="end">
-                        <EditOutlinedIcon
-                            fontSize="small"
-                            style={{ color: blue[300] }}
-                        />
-                    </IconButton>
-                    <IconButton edge="end">
-                        <DeleteOutlinedIcon
-                            fontSize="small"
-                            style={{ color: red[300] }}
-                        />
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
-        );
-    }
-
-    function generateElements(element, value) {
-        // console.log(`O ${prop} É INSTANCEOF ELEMENT`);
-        // Element, will need to create the base and its objects
+    function generateCollapse(element) {
         if (element instanceof Element) {
-            console.log("creating complex item: " + element);
-            return createComplexItem(element);
+            return (
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                    {Object.keys(element).map(prop => {
+                        console.log(
+                            `TÁ CHEGANDO AQUI O ${element} COM A ${prop} E VALUE ${element[prop]}`
+                        );
+                        return <ElementList
+                            baseElement={
+                                element[prop] instanceof Element
+                                    ? element[prop]
+                                    : { title: prop, value: element[prop] }
+                            }
+                        />;
+                    })}
+                </Collapse>
+            );
         } else {
-            console.log("creating simple item: " + element + ": " + value);
-            return createSimpleItem(element, value);
-            // Object.keys(element).forEach((prop) => {
-            //     console.log(prop);
-            // });
+            return '';
         }
     }
 
-    return (
-        <Container>
-            <List component="nav">
-                {generateElements(baseFile)}
-            </List>
-        </Container>
-    );
-}
+    function generateExpand(element) {
+        if (element instanceof Element) {
+            return (
+                <>
+                    {open ? (
+                        <IconButton edge="start">
+                            <ExpandLessIcon fontSize="small" />
+                        </IconButton>
+                    ) : (
+                        <IconButton onClick={handleClick} edge="start">
+                            <ExpandMoreIcon fontSize="small" />
+                        </IconButton>
+                    )}
+                </>
+            );
+        } else {
+            return '';
+        }
+    }
 
-export default ElementList;
+    console.log(`RECEBENDO ELEMENTO PRA CRIAR: ${props.baseElement}`);
+    return <List component="nav">{createItem(props.baseElement)}</List>;
+}
