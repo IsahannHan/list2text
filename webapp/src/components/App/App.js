@@ -1,10 +1,7 @@
-import {
-    Divider,
-    Grid,
-    Paper,
-    Container
-} from '@material-ui/core';
-import ElementDisplay from '../ElementDisplay/ElementDisplay';
+import React from 'react';
+
+import { Divider, Grid, Paper, Container } from '@material-ui/core';
+import ElementDialogue from '../ElementDialogue/ElementDialogue';
 import ElementEditor from '../ElementEditor/ElementEditor';
 import ElementList from '../ElementList/ElementList';
 import ElementListButtons from '../ElementList/ElementListButtons/ElementListButtons';
@@ -14,11 +11,12 @@ import BaseFile from '../../model/usdf/basefile';
 import Conversation from '../../model/usdf/conversation';
 
 function App() {
-
-    let baseFile = new BaseFile(
-        'teste',
-        'bananinha',
-        new Conversation('joãozin', 'retarda', 5)
+    const [baseFile, setBaseFile] = React.useState(
+        new BaseFile(
+            'teste',
+            'bananinha',
+            new Conversation('joãozin', 'abacaxi', 5)
+        )
     );
 
     return (
@@ -35,7 +33,7 @@ function App() {
                         <ElementListButtons />
                         <Divider variant="middle" />
                         <Container>
-                        <ElementList baseElement={baseFile} />
+                            <ElementList baseElement={baseFile} />
                         </Container>
                     </Grid>
                 </Paper>
@@ -49,7 +47,7 @@ function App() {
 
             <Grid item xs={3}>
                 <Paper>
-                    <ElementDisplay />
+                    <ElementDialogue generatedDialogue={baseFile.tag(0)} />
                 </Paper>
             </Grid>
         </Grid>
