@@ -36,7 +36,8 @@ export default function ElementList(props) {
                 <ListItem button onClick={handleClick}>
                     {generateExpand(element)}
                     <ListItemText
-                        primary={element.title + ' ' + element.value}
+                        primary={element.title}
+                        secondary={element.value?? ''}
                     />
                     <ListItemSecondaryAction>
                         <IconButton edge="end">
@@ -69,9 +70,6 @@ export default function ElementList(props) {
             return (
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     {Object.keys(element).map(prop => {
-                        console.log(
-                            `TÁ CHEGANDO AQUI O ${element} COM A ${prop} E VALUE ${element[prop]}`
-                        );
                         return <ElementList
                             baseElement={
                                 element[prop] instanceof Element
@@ -107,6 +105,5 @@ export default function ElementList(props) {
         }
     }
 
-    console.log(`RECEBENDO ELEMENTO PRA CRIAR: ${props.baseElement}`);
     return <List component="nav">{createItem(props.baseElement)}</List>;
 }
