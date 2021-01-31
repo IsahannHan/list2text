@@ -9,9 +9,8 @@ function ElementDialogue(props) {
             variant="outlined"
             multiline
             defaultValue="Generated dialogue will soon appear here..."
-            rows={100}
+            rows={15}
             value={props.generatedDialogue}
-            size="big"
         />
     );
 }
