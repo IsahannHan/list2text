@@ -55,7 +55,12 @@ export default class ElementList extends React.Component {
                                         </IconButton>
                                     )}
                                     <ListItemText primary={key} />
-                                    <ElementActionButtons isMap={true} />
+                                    <ElementActionButtons
+                                        value={key}
+                                        isMap={true}
+                                        editItem={this.props.editItem}
+                                        deleteItem={this.props.deleteItem}
+                                    />
                                 </ListItem>
                                 <Collapse
                                     key={`${key}.collapse`}
@@ -83,6 +88,7 @@ export default class ElementList extends React.Component {
                                 <ElementActionButtons
                                     value={key}
                                     isMap={false}
+                                    editItem={this.props.editItem}
                                     deleteItem={this.props.deleteItem}
                                 />
                             </ListItem>

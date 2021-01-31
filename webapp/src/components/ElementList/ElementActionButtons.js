@@ -27,7 +27,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: blue[300] }}
                 />
             ),
-            action: null,
+            action: () => props.editItem(props.value),
             shouldRender: true,
         },
         {

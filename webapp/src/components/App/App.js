@@ -8,45 +8,43 @@ import ActionButtons from '../ActionButtons/ActionButtons';
 import './App.css';
 
 class App extends React.Component {
-    // const [baseFile, setBaseFile] = React.useState(
-    //     new BaseFile(
-    //         'teste',
-    //         'bananinha',
-    //         new Conversation('joãozin', 'abacaxi', 5)
-    //     )
-    // );
-
     constructor(props) {
         super(props);
 
-        let arrei = [
-            ['afff', 'ff'],
-            ['wq', 'kekeke'],
-        ];
-        let kvArray2 = new Map(arrei);
-        let kvArray = [
-            ['banana', 'joãozinho'],
-            ['goiaba', 'tom cruise'],
-            ['oiee', kvArray2],
-        ];
-
-        this.state = { map: new Map(kvArray), elementCount: 0 };
+        this.state = {
+            currentElement: { currentKey: undefined, currentValue: undefined },
+            map: new Map(),
+            elementCount: 1,
+        };
 
         this.addNewItem = this.addNewItem.bind(this);
+        this.editItem = this.editItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.clearMap = this.clearMap.bind(this);
     }
 
-    addNewItem() {
-        let value = `New element ${this.state.elementCount}`;
+    addNewItem(single) {
+        let description = 'Type something...';
+        let label = `New element ${this.state.elementCount}`;
+        let value = single ? description : new Map([[label, description]]);
+
         this.setState({
-            map: this.state.map.set(value),
+            map: this.state.map.set(label, value),
             elementCount: this.state.elementCount + 1,
         });
     }
 
-    deleteItem(value) {
-        this.state.map.delete(value);
+    editItem(key) {
+        this.setState({
+            currentElement: {
+                currentKey: key,
+                currentValue: this.state.map.get(key)
+            }
+        });
+    }
+
+    deleteItem(key) {
+        this.state.map.delete(key);
     }
 
     clearMap() {
@@ -80,6 +78,7 @@ class App extends React.Component {
                             >
                                 <ElementList
                                     elementsMap={this.state.map}
+                                    editItem={this.editItem}
                                     deleteItem={this.deleteItem}
                                 />
                             </Container>
@@ -89,7 +88,7 @@ class App extends React.Component {
 
                 <Grid item xs={3}>
                     <Paper elevation={3}>
-                        <ElementEditor />
+                        <ElementEditor element={this.state.currentElement} />
                     </Paper>
                 </Grid>
 

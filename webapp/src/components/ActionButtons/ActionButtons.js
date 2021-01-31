@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Grid } from '@material-ui/core';
-import { green } from '@material-ui/core/colors';
+import { blue, green } from '@material-ui/core/colors';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import React from 'react';
@@ -29,10 +29,21 @@ export default class ActionButtons extends React.Component {
                             color: '#FFFFFF',
                             backgroundColor: green[300],
                         }}
-                        endIcon={<AddBoxOutlinedIcon />}
-                        onClick={() => this.props.addNewItem()}
+                        startIcon={<AddBoxOutlinedIcon />}
+                        onClick={() => this.props.addNewItem(true)}
                     >
-                        New
+                        Single
+                    </Button>
+
+                    <Button
+                        style={{
+                            color: '#FFFFFF',
+                            backgroundColor: blue[300],
+                        }}
+                        startIcon={<AddBoxOutlinedIcon />}
+                        onClick={() => this.props.addNewItem(false)}
+                    >
+                        List
                     </Button>
 
                     <Button
