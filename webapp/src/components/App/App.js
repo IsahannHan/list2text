@@ -1,10 +1,10 @@
+import { Container, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import React from 'react';
-
-import { Divider, Grid, Paper, Container } from '@material-ui/core';
+import ActionButtons from '../ActionButtons/ActionButtons';
 import ElementDialogue from '../ElementDialogue/ElementDialogue';
 import ElementEditor from '../ElementEditor/ElementEditor';
 import ElementList from '../ElementList/ElementList';
-import ActionButtons from '../ActionButtons/ActionButtons';
+import Preferences from '../Preferences/Preferences';
 import './App.css';
 
 class App extends React.Component {
@@ -38,8 +38,8 @@ class App extends React.Component {
         this.setState({
             currentElement: {
                 currentKey: key,
-                currentValue: this.state.map.get(key)
-            }
+                currentValue: this.state.map.get(key),
+            },
         });
     }
 
@@ -53,51 +53,57 @@ class App extends React.Component {
 
     render() {
         return (
-            <Grid
-                container
-                spacing={3}
-                alignItems="center"
-                justify="center"
-                style={{ minHeight: '100vh' }}
-            >
-                <Grid item xs={3}>
-                    <Paper elevation={3}>
-                        <Grid container spacing={2} direction="column">
-                            <ActionButtons
-                                map={this.map}
-                                addNewItem={this.addNewItem}
-                                clearMap={this.clearMap}
-                            />
-                            <Divider variant="middle" />
-
-                            <Container
-                                style={{
-                                    height: 500,
-                                    overflow: 'scroll',
-                                }}
-                            >
-                                <ElementList
-                                    elementsMap={this.state.map}
-                                    editItem={this.editItem}
-                                    deleteItem={this.deleteItem}
+            <>
+                <Preferences />
+                <Grid
+                    container
+                    spacing={3}
+                    alignItems="center"
+                    justify="center"
+                    style={{ minHeight: '100vh' }}
+                >
+                    <Grid item xs={3}>
+                        <Paper elevation={3}>
+                            <Grid container spacing={2} direction="column">
+                                <ActionButtons
+                                    map={this.map}
+                                    addNewItem={this.addNewItem}
+                                    clearMap={this.clearMap}
                                 />
-                            </Container>
-                        </Grid>
-                    </Paper>
-                </Grid>
+                                
+                                <Divider variant="middle" />
 
-                <Grid item xs={3}>
-                    <Paper elevation={3}>
-                        <ElementEditor element={this.state.currentElement} />
-                    </Paper>
-                </Grid>
+                                <Container
+                                    style={{
+                                        height: 500,
+                                        overflow: 'scroll',
+                                    }}
+                                >
+                                    <ElementList
+                                        elementsMap={this.state.map}
+                                        editItem={this.editItem}
+                                        deleteItem={this.deleteItem}
+                                    />
+                                </Container>
+                            </Grid>
+                        </Paper>
+                    </Grid>
 
-                <Grid item xs={3}>
-                    <Paper>
-                        <ElementDialogue />
-                    </Paper>
+                    <Grid item xs={3}>
+                        <Paper elevation={3}>
+                            <ElementEditor
+                                element={this.state.currentElement}
+                            />
+                        </Paper>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <Paper>
+                            <ElementDialogue />
+                        </Paper>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </>
         );
     }
 }
