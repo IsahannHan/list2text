@@ -33,7 +33,7 @@ export default class GeneratedText extends React.Component {
 
     // Nested
     
-    defaultNestedStart = 0;
+    nestedLevel = this.preferences.nestedLevel??0;
     nestedItemStart = this.preferences.nestedItemStart??'\t';
 
     // Helper methods
@@ -119,7 +119,7 @@ export default class GeneratedText extends React.Component {
                 multiline
                 rows={15}
                 fullWidth={true}
-                value={this.props.map.size === 0 ? 'Generated text will soon appear here...' : this.generateText(this.props.map, this.defaultNestedStart)}
+                value={this.props.map.size === 0 ? 'Generated text will soon appear here...' : this.generateText(this.props.map, this.nestedLevel)}
             />
         );
     }

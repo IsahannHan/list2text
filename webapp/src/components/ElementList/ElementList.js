@@ -31,15 +31,16 @@ export default class ElementList extends React.Component {
                     if (value instanceof Map) {
                         return (
                             <>
-                                <ListItem
-                                    key={key}
-                                    button
-                                    onClick={() =>
-                                        this.handleClick(this.state.open)
-                                    }
-                                >
+                                <ListItem key={key}>
                                     {this.state.open ? (
-                                        <IconButton edge="start">
+                                        <IconButton
+                                            onClick={() =>
+                                                this.handleClick(
+                                                    this.state.open
+                                                )
+                                            }
+                                            edge="start"
+                                        >
                                             <ExpandLessIcon fontSize="small" />
                                         </IconButton>
                                     ) : (
@@ -77,13 +78,7 @@ export default class ElementList extends React.Component {
                         );
                     } else {
                         return (
-                            <ListItem
-                                key={key}
-                                button
-                                onClick={() =>
-                                    this.handleClick(this.state.open)
-                                }
-                            >
+                            <ListItem key={key}>
                                 <ListItemText primary={key} secondary={value} />
                                 <ElementActionButtons
                                     value={key}
