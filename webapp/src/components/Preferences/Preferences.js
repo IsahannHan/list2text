@@ -18,7 +18,7 @@ export default class Preferences extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { tabingExpanded: true };
+        this.state = { tabingExpanded: false };
     }
 
     handleExpandClick() {
@@ -28,10 +28,10 @@ export default class Preferences extends React.Component {
     render() {
         return (
             <Grid container spacing={2} alignItems="center" justify="center">
-                <Grid item xs={3}>
+                <Grid item xs={12}>
                     <Card>
                         <CardHeader
-                            title="Tabing preferences"
+                            title="Preferences"
                             action={
                                 <IconButton
                                     aria-label="settings"
@@ -82,14 +82,6 @@ export default class Preferences extends React.Component {
                             </CardContent>
                         </Collapse>
                     </Card>
-                </Grid>
-                <Grid item xs={3}>
-                    <Paper elevation={3}>
-                        <Typography variant="h6" align="center">
-                            Spacing preferences
-                        </Typography>
-                        <Divider variant="middle" />
-                    </Paper>
                 </Grid>
             </Grid>
         );

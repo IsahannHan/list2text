@@ -1,9 +1,9 @@
-import { Container, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import { Container, Divider, Grid, Paper } from '@material-ui/core';
 import React from 'react';
 import ActionButtons from '../ActionButtons/ActionButtons';
-import ElementDialogue from '../ElementDialogue/ElementDialogue';
 import ElementEditor from '../ElementEditor/ElementEditor';
 import ElementList from '../ElementList/ElementList';
+import GeneratedText from '../GeneratedText/GeneratedText';
 import Preferences from '../Preferences/Preferences';
 import './App.css';
 
@@ -44,7 +44,11 @@ class App extends React.Component {
     }
 
     deleteItem(key) {
-        this.state.map.delete(key);
+        if (this.state.map.has(key)) {
+            this.state.map.delete(key);
+        }
+
+        this.setState({});
     }
 
     clearMap() {
@@ -70,7 +74,7 @@ class App extends React.Component {
                                     addNewItem={this.addNewItem}
                                     clearMap={this.clearMap}
                                 />
-                                
+
                                 <Divider variant="middle" />
 
                                 <Container
@@ -99,7 +103,7 @@ class App extends React.Component {
 
                     <Grid item xs={3}>
                         <Paper>
-                            <ElementDialogue />
+                            <GeneratedText preferences={{}} map={this.state.map} />
                         </Paper>
                     </Grid>
                 </Grid>
