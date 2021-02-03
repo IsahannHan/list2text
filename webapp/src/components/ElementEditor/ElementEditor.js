@@ -2,29 +2,21 @@ import { TextField, Button } from '@material-ui/core';
 import React from 'react';
 
 export default class ElementEditor extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            key: this.props.element.currentKey,
-            value: this.props.element.currentValue,
-        };
-    }
-
     render() {
         return (
             <>
                 <TextField
-                    id="standard-basic"
+                    name="key"
                     label="Key"
-                    value={this.state.key}
+                    onChange={this.props.onChange}
+                    value={this.props.element.currentKey}
                 />
                 <TextField
-                    id="teste-basic"
+                    name="value"
                     label="Value"
-                    value={this.state.value}
+                    onChange={this.props.onChange}
+                    value={this.props.element.currentValue}
                 />
-                <Button title="Save" />
             </>
         );
     }

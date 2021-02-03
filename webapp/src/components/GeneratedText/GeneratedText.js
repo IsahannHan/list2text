@@ -3,63 +3,28 @@ import React from 'react';
 
 export default class GeneratedText extends React.Component {
 
-    // Constants for simple elements
-
-    preferences = this.props.preferences;
-
-    simpleKeyStart = this.preferences.simpleKeyStart??'';
-    simpleKeyEnd = this.preferences.simpleKeyEnd??'';
-
-    simpleValueStart = this.preferences.simpleValueStart??'"';
-    simpleValueEnd = this.preferences.simpleValueEnd??'";';
-
-    simpleAssigner = this.preferences.simpleAssigner??' = ';
-
-    simpleLineStart = this.preferences.simpleLineStart??'';
-    simpleLineEnd = this.preferences.simpleLineEnd??'\n';
-
-    // Constants for complex elements
-
-    complexKeyStart = this.preferences.complexKeyStart??'';
-    complexKeyEnd = this.preferences.complexKeyEnd??'';
-
-    complexValueStart = this.preferences.complexValueStart??'\n{\n';
-    complexValueEnd = this.preferences.complexValueEnd??'}';
-
-    complexAssigner = this.preferences.complexAssigner??' ';
-
-    complexLineStart = this.preferences.complexStart??'';
-    complexLineEnd = this.preferences.complexEnd??'\n';
-
-    // Nested
-    
-    nestedLevel = this.preferences.nestedLevel??0;
-    nestedItemStart = this.preferences.nestedItemStart??'\t';
-
-    // Helper methods
-
     surround(isKey, isSimple, value) {
-        let start = isKey ? (isSimple ? this.simpleKeyStart : this.complexKeyStart ) : (isSimple ? this.simpleValueStart : this.complexValueStart);
-        let end = isKey ? (isSimple ? this.simpleKeyEnd : this.complexKeyEnd ) : (isSimple ? this.simpleValueEnd : this.complexValueEnd);
+        let start = isKey ? (isSimple ? this.props.preferences.simpleKeyStart : this.props.preferences.complexKeyStart ) : (isSimple ? this.props.preferences.simpleValueStart : this.props.preferences.complexValueStart);
+        let end = isKey ? (isSimple ? this.props.preferences.simpleKeyEnd : this.props.preferences.complexKeyEnd ) : (isSimple ? this.props.preferences.simpleValueEnd : this.props.preferences.complexValueEnd);
 
         return start + value + end;
     }
 
     evaluate(isSimple, key, value){
-        let assigner = isSimple ? this.simpleAssigner : this.complexAssigner;
+        let assigner = isSimple ? this.props.preferences.simpleAssigner : this.props.preferences.complexAssigner;
 
         return key + assigner + value;
     }
 
     startAndEndLine(isSimple, value){
-        let start = isSimple ? this.simpleLineStart : this.complexLineStart;
-        let end = isSimple ? this.simpleLineEnd : this.complexLineEnd;
+        let start = isSimple ? this.props.preferences.simpleLineStart : this.props.preferences.complexLineStart;
+        let end = isSimple ? this.props.preferences.simpleLineEnd : this.props.preferences.complexLineEnd;
 
         return start + value + end;
     }
 
     nest(nestedLevel, value){
-        return this.nestedItemStart.repeat(nestedLevel) + value;
+        return this.props.preferences.nestedItemStart.repeat(nestedLevel) + value;
     }
 
     // Creating expressions
@@ -119,7 +84,7 @@ export default class GeneratedText extends React.Component {
                 multiline
                 rows={15}
                 fullWidth={true}
-                value={this.props.map.size === 0 ? 'Generated text will soon appear here...' : this.generateText(this.props.map, this.nestedLevel)}
+                value={this.props.map.size === 0 ? 'Generated text will soon appear here...' : this.generateText(this.props.map, this.props.nestedLevel)}
             />
         );
     }

@@ -31,7 +31,7 @@ export default class ElementList extends React.Component {
                     if (value instanceof Map) {
                         return (
                             <>
-                                <ListItem key={key}>
+                                <ListItem key={`${key}.list`}>
                                     {this.state.open ? (
                                         <IconButton
                                             onClick={() =>
