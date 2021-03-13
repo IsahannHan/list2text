@@ -2,76 +2,98 @@ import { TextField } from '@material-ui/core';
 import React from 'react';
 
 export default class GeneratedText extends React.Component {
-
-    surround(isKey, isSimple, value) {
-        let start = isKey ? (isSimple ? this.props.preferences.simpleKeyStart : this.props.preferences.complexKeyStart ) : (isSimple ? this.props.preferences.simpleValueStart : this.props.preferences.complexValueStart);
-        let end = isKey ? (isSimple ? this.props.preferences.simpleKeyEnd : this.props.preferences.complexKeyEnd ) : (isSimple ? this.props.preferences.simpleValueEnd : this.props.preferences.complexValueEnd);
+    surround(isKey, value, typePreferences) {
+        const start = isKey
+            ? typePreferences.keyStart
+            : typePreferences.valueStart;
+        const end = isKey ? typePreferences.keyEnd : typePreferences.valueEnd;
 
         return start + value + end;
     }
 
-    evaluate(isSimple, key, value){
-        let assigner = isSimple ? this.props.preferences.simpleAssigner : this.props.preferences.complexAssigner;
+    evaluate(key, value, typePreferences) {
+        const assigner = typePreferences.assigner;
 
         return key + assigner + value;
     }
 
-    startAndEndLine(isSimple, value){
-        let start = isSimple ? this.props.preferences.simpleLineStart : this.props.preferences.complexLineStart;
-        let end = isSimple ? this.props.preferences.simpleLineEnd : this.props.preferences.complexLineEnd;
+    startAndEndLine(value, typePreferences) {
+        const start = typePreferences.lineStart;
+        const end = typePreferences.lineEnd;
 
         return start + value + end;
     }
 
-    nest(nestedLevel, value){
-        return this.props.preferences.nestedItemStart.repeat(nestedLevel) + value;
+    nest(value, nestedLevel) {
+        const nestedItemStart = this.props.profile.nestedItemStart;
+
+        return nestedItemStart.repeat(nestedLevel) + value;
     }
 
     // Creating expressions
 
-    createSimpleExpression(key, value, nestedLevel){
-        let formattedKey = this.surround(true, true, key);
-        let formattedValue = this.surround(false, true, value);
+    createTypedExpression(key, value, typePreferences, nestedLevel) {
+        let formattedKey = this.surround(true, key, typePreferences);
+        let formattedValue = this.surround(false, value, typePreferences);
 
-        let expression = this.evaluate(true, formattedKey, formattedValue);
-        let expressionWithStartAndEnd = this.startAndEndLine(true, expression);
+        let expression = this.evaluate(
+            formattedKey,
+            formattedValue,
+            typePreferences
+        );
+        let expressionWithStartAndEnd = this.startAndEndLine(
+            expression,
+            typePreferences
+        );
 
-        let nestedExpression = this.nest(nestedLevel, expressionWithStartAndEnd);
-
-        return nestedExpression;
-    }
-
-    createComplexExpression(key, value, nestedLevel){
-        let complexValue = this.generateText(value, nestedLevel+1);
-
-        let formattedKey = this.surround(true, false, key);
-        let formattedValue = this.surround(false, false, complexValue);
-
-        let expression = this.evaluate(false, formattedKey, formattedValue);
-        let expressionWithStartAndEnd = this.startAndEndLine(false, expression);
-
-        let nestedExpression = this.nest(nestedLevel, expressionWithStartAndEnd);
+        let nestedExpression = this.nest(
+            expressionWithStartAndEnd,
+            nestedLevel
+        );
 
         return nestedExpression;
     }
 
-    createExpression(key, value, nestedLevel){
-        return value instanceof Map ? this.createComplexExpression(key, value, nestedLevel) : this.createSimpleExpression(key, value, nestedLevel);
+    createExpression(key, value, typePreferences, nestedLevel) {
+        // Either its a simple value, or a complex one (calls generateText to create its entire inside)
+        const typedValue = Array.isArray(value)
+            ? this.generateText(value, nestedLevel + 1)
+            : value;
+
+        return this.createTypedExpression(
+            key,
+            typedValue,
+            typePreferences,
+            nestedLevel
+        );
     }
 
     // Generator
 
-    generateText(map, nestedLevel) {
+    generateText(elementList, nestedLevel) {
         let result = '';
 
-        Array.from(map.entries()).forEach((entry) => {
-            let key = entry[0];
-            let value = entry[1];
+        elementList.forEach((element) => {
+            const key = element.key;
+            const value = element.value;
+            const type = this.getTypeByElement(element);
+            const typePreferences = type.preferences;
 
-            result += this.createExpression(key, value, nestedLevel);
+            result += this.createExpression(
+                key,
+                value,
+                typePreferences,
+                nestedLevel
+            );
         });
 
         return result;
+    }
+
+    // Utils
+
+    getTypeByElement(element) {
+        return this.props.profile.types.find((t) => t.type === element.type);
     }
 
     render() {
@@ -84,7 +106,14 @@ export default class GeneratedText extends React.Component {
                 multiline
                 rows={15}
                 fullWidth={true}
-                value={this.props.map.size === 0 ? 'Generated text will soon appear here...' : this.generateText(this.props.map, this.props.nestedLevel)}
+                value={
+                    this.props.elementList.size === 0
+                        ? 'Generated text will soon appear here...'
+                        : this.generateText(
+                              this.props.elementList,
+                              this.props.profile.nestedLevel
+                          )
+                }
             />
         );
     }

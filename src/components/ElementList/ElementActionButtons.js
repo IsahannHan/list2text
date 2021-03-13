@@ -6,7 +6,7 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import React from 'react';
 
 export default function ElementActionButtons(props) {
-    const isMap = props.isMap;
+    const isComplex = props.isComplex;
     const buttons = [
         {
             key: 'Add',
@@ -17,7 +17,7 @@ export default function ElementActionButtons(props) {
                 />
             ),
             action: null,
-            shouldRender: isMap,
+            shouldRender: isComplex,
         },
         {
             key: 'Edit',
@@ -27,7 +27,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: blue[300] }}
                 />
             ),
-            action: () => props.editItem(props.value),
+            action: () => props.editItem(props.element),
             shouldRender: true,
         },
         {
@@ -38,7 +38,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: red[300] }}
                 />
             ),
-            action: () => props.deleteItem(props.value),
+            action: () => props.deleteItem(props.element),
             shouldRender: true,
         },
     ];

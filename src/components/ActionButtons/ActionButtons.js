@@ -49,7 +49,7 @@ export default class ActionButtons extends React.Component {
                     <Button
                         color="secondary"
                         startIcon={<DeleteOutlinedIcon />}
-                        onClick={() => this.props.clearMap()}
+                        onClick={() => this.props.clearList()}
                     >
                         Clear
                     </Button>

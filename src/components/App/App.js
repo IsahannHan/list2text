@@ -4,7 +4,7 @@ import ActionButtons from '../ActionButtons/ActionButtons';
 import ElementEditor from '../ElementEditor/ElementEditor';
 import ElementList from '../ElementList/ElementList';
 import GeneratedText from '../GeneratedText/GeneratedText';
-import Preferences from '../Preferences/Preferences';
+import update from 'immutability-helper';
 import './App.css';
 
 class App extends React.Component {
@@ -12,32 +12,86 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            currentElement: { currentKey: '', currentValue: '' },
-            map: new Map(),
+            currentElement: { id: 0, key: '', value: '', type: '' },
+            elementList: [],
             elementCount: 1,
-            preferences: {
-                simpleKeyStart: '',
-                simpleKeyEnd: '',
+            profiles: [
+                {
+                    name: 'default',
+                    description: 'Default profile',
+                    types: [
+                        {
+                            type: 'simple',
+                            preferences: {
+                                keyStart: '',
+                                keyEnd: '',
 
-                simpleValueStart: '"',
-                simpleValueEnd: '",',
+                                valueStart: '"',
+                                valueEnd: '",',
 
-                simpleAssigner: ' : ',
+                                lineStart: '',
+                                lineEnd: '',
 
-                simpleLineStart: '',
-                simpleLineEnd: '\n',
+                                assigner: ' : ',
+                            },
+                            nestedLevel: 0,
+                            nestedItemStart: '\t',
+                        },
+                        {
+                            type: 'complex',
+                            preferences: {
+                                keyStart: '',
+                                keyEnd: '',
 
-                complexKeyStart: '',
-                complexKeyEnd: '',
+                                valueStart: '"',
+                                valueEnd: '",',
 
-                complexValueStart: '\n{\n',
-                complexValueEnd: '}',
+                                lineStart: '',
+                                lineEnd: '',
 
-                complexAssigner: ' ',
+                                assigner: ' : ',
+                            },
+                            nestedLevel: 0,
+                            nestedItemStart: '\t',
+                        },
+                    ],
+                },
+            ],
+            selectedProfile: {
+                name: 'default',
+                description: 'Default profile',
+                types: [
+                    {
+                        type: 'simple',
+                        preferences: {
+                            keyStart: '',
+                            keyEnd: '',
 
-                complexLineStart: '',
-                complexLineEnd: '\n',
+                            valueStart: '"',
+                            valueEnd: '",',
 
+                            lineStart: '',
+                            lineEnd: '\n',
+
+                            assigner: ' : ',
+                        },
+                    },
+                    {
+                        type: 'complex',
+                        preferences: {
+                            keyStart: '',
+                            keyEnd: '',
+
+                            valueStart: '{\n',
+                            valueEnd: '}\n',
+
+                            lineStart: '',
+                            lineEnd: '',
+
+                            assigner: ' : ',
+                        },
+                    },
+                ],
                 nestedLevel: 0,
                 nestedItemStart: '\t',
             },
@@ -46,59 +100,79 @@ class App extends React.Component {
         this.addNewItem = this.addNewItem.bind(this);
         this.editItem = this.editItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
-        this.clearMap = this.clearMap.bind(this);
+        this.clearList = this.clearList.bind(this);
 
         this.handlePreferenceChange = this.handlePreferenceChange.bind(this);
         this.handleItemChanged = this.handleItemChanged.bind(this);
     }
 
-    addNewItem(single) {
-        let description = 'Type something...';
-        let label = `New element ${this.state.elementCount}`;
-        let value = single ? description : new Map([[label, description]]);
+    addNewItem(simple) {
+        const key = `New element ${this.state.elementCount}`;
+        const value = simple
+            ? 'Type something...'
+            : [
+                  {
+                      key: key + '[NESTED]',
+                      value: 'Type something...',
+                      type: 'simple',
+                  },
+              ];
 
-        this.setState({
-            map: this.state.map.set(label, value),
-            elementCount: this.state.elementCount + 1,
-        });
+        const newElement = {
+            id: this.state.elementCount,
+            key: key,
+            value: value,
+            type: 'complex',
+        };
+
+        this.setState((prevState) => ({
+            elementList: [...prevState.elementList, newElement],
+            elementCount: prevState.elementCount + 1,
+        }));
     }
 
-    editItem(key) {
+    editItem(element) {
         this.setState({
-            currentElement: {
-                currentKey: key,
-                currentValue: this.state.map.get(key),
-            },
+            currentElement: element,
         });
     }
 
     deleteItem(key) {
-        this.state.map.delete(key);
-
-        this.setState({});
+        this.setState({
+            elementList: this.state.elementList.filter(
+                (item) => item.key !== key
+            ),
+        });
     }
 
-    clearMap() {
-        this.setState({ map: new Map() });
+    clearList() {
+        this.setState({ elementList: [] });
     }
 
-    handleItemChanged(event) {
-        let changedValue = event.target.value;
-        let name = event.target.name;
+    handleItemChanged(event, id) {
+        const element = this.state.elementList.find((e) => e.id === id);
 
-        let key = name === 'key' ? changedValue : this.state.currentElement.currentKey;
-        let value = name === 'value' ? changedValue : this.state.currentElement.currentValue;
+        const changedField = event.target.name;
+        const changedValue = event.target.value;
 
-        this.state.map.set(key, value);
+        const newElement = update(element, {
+            [changedField]: { $set: changedValue },
+        });
+        const newElementList = update(this.state.elementList, {
+            $splice: [[id, 1, newElement]],
+        });
 
-        this.setState({});
+        this.setState({
+            currentElement: newElement,
+            elementList: newElementList,
+        });
     }
 
     handlePreferenceChange(event) {
         this.setState((prevState) => ({
             preferences: {
                 ...prevState.preferences,
-                [event.target.name]: [event.target.value]
+                [event.target.name]: [event.target.value],
             },
         }));
     }
@@ -106,10 +180,10 @@ class App extends React.Component {
     render() {
         return (
             <>
-                <Preferences
+                {/* <Preferences
                     preferences={this.state.preferences}
                     onChange={this.handlePreferenceChange}
-                />
+                /> */}
                 <Grid
                     container
                     spacing={3}
@@ -121,9 +195,9 @@ class App extends React.Component {
                         <Paper elevation={3}>
                             <Grid container spacing={2} direction="column">
                                 <ActionButtons
-                                    map={this.map}
+                                    elementList={this.elementList}
                                     addNewItem={this.addNewItem}
-                                    clearMap={this.clearMap}
+                                    clearList={this.clearList}
                                 />
 
                                 <Divider variant="middle" />
@@ -135,7 +209,7 @@ class App extends React.Component {
                                     }}
                                 >
                                     <ElementList
-                                        elementsMap={this.state.map}
+                                        elementList={this.state.elementList}
                                         editItem={this.editItem}
                                         deleteItem={this.deleteItem}
                                     />
@@ -149,6 +223,7 @@ class App extends React.Component {
                             <ElementEditor
                                 onChange={this.handleItemChanged}
                                 element={this.state.currentElement}
+                                types={this.state.selectedProfile.types}
                             />
                         </Paper>
                     </Grid>
@@ -156,8 +231,8 @@ class App extends React.Component {
                     <Grid item xs={3}>
                         <Paper>
                             <GeneratedText
-                                preferences={this.state.preferences}
-                                map={this.state.map}
+                                profile={this.state.selectedProfile}
+                                elementList={this.state.elementList}
                             />
                         </Paper>
                     </Grid>

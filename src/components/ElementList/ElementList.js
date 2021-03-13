@@ -25,10 +25,11 @@ export default class ElementList extends React.Component {
     render() {
         return (
             <List component="nav">
-                {[...this.props.elementsMap.keys()].map((key) => {
-                    let value = this.props.elementsMap.get(key);
+                {this.props.elementList.map((element) => {
+                    const key = element.key;
+                    const value = element.value;
 
-                    if (value instanceof Map) {
+                    if (Array.isArray(value)) {
                         return (
                             <>
                                 <ListItem key={`${key}.list`}>
@@ -58,7 +59,7 @@ export default class ElementList extends React.Component {
                                     <ListItemText primary={key} />
                                     <ElementActionButtons
                                         value={key}
-                                        isMap={true}
+                                        isComplex={true}
                                         editItem={this.props.editItem}
                                         deleteItem={this.props.deleteItem}
                                     />
@@ -70,7 +71,7 @@ export default class ElementList extends React.Component {
                                     unmountOnExit
                                 >
                                     <ElementList
-                                        elementsMap={value}
+                                        elementList={value}
                                         deleteItem={this.props.deleteItem}
                                     />
                                 </Collapse>
@@ -78,11 +79,11 @@ export default class ElementList extends React.Component {
                         );
                     } else {
                         return (
-                            <ListItem key={key}>
+                            <ListItem key={value}>
                                 <ListItemText primary={key} secondary={value} />
                                 <ElementActionButtons
-                                    value={key}
-                                    isMap={false}
+                                    element={element}
+                                    isComplex={false}
                                     editItem={this.props.editItem}
                                     deleteItem={this.props.deleteItem}
                                 />
