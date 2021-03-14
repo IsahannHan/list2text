@@ -4,8 +4,6 @@ import ActionButtons from '../ActionButtons/ActionButtons';
 import ElementEditor from '../ElementEditor/ElementEditor';
 import ElementList from '../ElementList/ElementList';
 import GeneratedText from '../GeneratedText/GeneratedText';
-import update from 'immutability-helper';
-import './App.css';
 
 class App extends React.Component {
     constructor(props) {

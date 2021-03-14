@@ -82,7 +82,7 @@ export default class ElementList extends React.Component {
                     } else {
                         return (
                             <ListItem key={id}>
-                                <ListItemText primary={key} secondary={value + id} />
+                                <ListItemText primary={key} secondary={value} />
                                 <ElementActionButtons
                                     element={element}
                                     isComplex={false}
