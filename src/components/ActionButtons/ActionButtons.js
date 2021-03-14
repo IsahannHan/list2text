@@ -6,9 +6,6 @@ import React from 'react';
 import './ActionButtons.css';
 
 export default class ActionButtons extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

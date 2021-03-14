@@ -28,11 +28,12 @@ export default class ElementList extends React.Component {
                 {this.props.elementList.map((element) => {
                     const key = element.key;
                     const value = element.value;
+                    const id = element.id;
 
                     if (Array.isArray(value)) {
                         return (
                             <>
-                                <ListItem key={`${key}.list`}>
+                                <ListItem key={id}>
                                     {this.state.open ? (
                                         <IconButton
                                             onClick={() =>
@@ -58,20 +59,21 @@ export default class ElementList extends React.Component {
                                     )}
                                     <ListItemText primary={key} />
                                     <ElementActionButtons
-                                        value={key}
+                                        element={element}
                                         isComplex={true}
                                         editItem={this.props.editItem}
                                         deleteItem={this.props.deleteItem}
                                     />
                                 </ListItem>
                                 <Collapse
-                                    key={`${key}.collapse`}
+                                    key={`${id}.collapse`}
                                     in={this.state.open}
                                     timeout="auto"
                                     unmountOnExit
                                 >
                                     <ElementList
                                         elementList={value}
+                                        editItem={this.props.editItem}
                                         deleteItem={this.props.deleteItem}
                                     />
                                 </Collapse>
@@ -79,8 +81,8 @@ export default class ElementList extends React.Component {
                         );
                     } else {
                         return (
-                            <ListItem key={value}>
-                                <ListItemText primary={key} secondary={value} />
+                            <ListItem key={id}>
+                                <ListItemText primary={key} secondary={value + id} />
                                 <ElementActionButtons
                                     element={element}
                                     isComplex={false}

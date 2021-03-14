@@ -27,7 +27,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: blue[300] }}
                 />
             ),
-            action: () => props.editItem(props.element),
+            action: () => props.editItem(props.element.id),
             shouldRender: true,
         },
         {
@@ -38,7 +38,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: red[300] }}
                 />
             ),
-            action: () => props.deleteItem(props.element),
+            action: () => props.deleteItem(props.element.id),
             shouldRender: true,
         },
     ];

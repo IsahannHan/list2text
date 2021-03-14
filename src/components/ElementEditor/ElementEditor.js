@@ -4,11 +4,18 @@ import {
     TextField,
     MenuItem,
     InputLabel,
+    FormControl
 } from '@material-ui/core';
 import React from 'react';
 
 export default class ElementEditor extends React.Component {
     render() {
+        const id = this.props.element.id;
+        const key = this.props.element.key;
+        const valueIsArray = Array.isArray(this.props.element.value);
+        const value = valueIsArray ? '[LIST INSIDE]' : this.props.element.value;
+        const type = this.props.element.type;
+
         return (
             <>
                 <Grid
@@ -22,13 +29,10 @@ export default class ElementEditor extends React.Component {
                         <TextField
                             name="key"
                             label="Key"
-                            onChange={(event) =>
-                                this.props.onChange(
-                                    event,
-                                    this.props.element.id
-                                )
-                            }
-                            value={this.props.element.key}
+                            onChange={(event) => this.props.onChange(event, id)}
+                            value={key || ''}
+                            variant="filled"
+                            fullWidth={true}
                         />
                     </Grid>
 
@@ -36,37 +40,36 @@ export default class ElementEditor extends React.Component {
                         <TextField
                             name="value"
                             label="Value"
-                            onChange={(event) =>
-                                this.props.onChange(
-                                    event,
-                                    this.props.element.id
-                                )
-                            }
-                            value={this.props.element.value}
+                            disabled={valueIsArray}
+                            onChange={(event) => this.props.onChange(event, id)}
+                            value={value || ''}
+                            variant="filled"
+                            fullWidth={true}
                         />
                     </Grid>
                     <Grid item xs={4}>
-                        <InputLabel id="type">Type</InputLabel>
-                        <Select
-                            value={this.props.element.type}
-                            id="type"
-                            labelId="Type"
-                            name="type"
-                            onChange={(event) =>
-                                this.props.onChange(
-                                    event,
-                                    this.props.element.id
-                                )
-                            }
-                        >
-                            {this.props.types.map((type) => {
-                                return (
-                                    <MenuItem value={type.type}>
-                                        {type.type}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
+                        <FormControl variant="filled">
+                            <InputLabel id="typez">Type</InputLabel>
+                            <Select
+                                value={type || ''}
+                                id="type"
+                                labelId="typez"
+                                name="type"
+                                variant="filled"
+                                minWidth="200px"
+                                onChange={(event) =>
+                                    this.props.onChange(event, id)
+                                }
+                            >
+                                {this.props.types.map((t) => {
+                                    return (
+                                        <MenuItem key={t.type} value={t.type}>
+                                            {t.type}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
             </>

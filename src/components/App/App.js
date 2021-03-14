@@ -12,9 +12,9 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            currentElement: { id: 0, key: '', value: '', type: '' },
+            currentElement: {},
             elementList: [],
-            elementCount: 1,
+            elementCount: 0,
             profiles: [
                 {
                     name: 'default',
@@ -107,16 +107,8 @@ class App extends React.Component {
     }
 
     addNewItem(simple) {
-        const key = `New element ${this.state.elementCount}`;
-        const value = simple
-            ? 'Type something...'
-            : [
-                  {
-                      key: key + '[NESTED]',
-                      value: 'Type something...',
-                      type: 'simple',
-                  },
-              ];
+        const key = 'New element';
+        const value = simple ? 'Type something...' : [];
 
         const newElement = {
             id: this.state.elementCount,
@@ -131,36 +123,44 @@ class App extends React.Component {
         }));
     }
 
-    editItem(element) {
+    editItem(id) {
         this.setState({
-            currentElement: element,
+            currentElement: this.state.elementList.find((e) => e.id === id),
         });
     }
 
-    deleteItem(key) {
-        this.setState({
-            elementList: this.state.elementList.filter(
-                (item) => item.key !== key
-            ),
-        });
+    deleteItem(id) {
+        const element = this.state.elementList.find((e) => e.id === id);
+
+        if (Array.isArray(element.value)) {
+            element.value = [];
+        }
+
+        this.setState((prevState) => ({
+            elementList: prevState.elementList.filter((e) => e.id !== id),
+            currentElement:
+                prevState.currentElement === element
+                    ? {}
+                    : prevState.currentElement,
+        }));
     }
 
     clearList() {
-        this.setState({ elementList: [] });
+        this.setState({ elementList: [], currentElement: {} });
     }
 
     handleItemChanged(event, id) {
         const element = this.state.elementList.find((e) => e.id === id);
+        const elementIndex = this.state.elementList.findIndex(
+            (e) => e.id === id
+        );
 
         const changedField = event.target.name;
         const changedValue = event.target.value;
 
-        const newElement = update(element, {
-            [changedField]: { $set: changedValue },
-        });
-        const newElementList = update(this.state.elementList, {
-            $splice: [[id, 1, newElement]],
-        });
+        const newElement = { ...element, [changedField]: changedValue };
+        const newElementList = this.state.elementList;
+        newElementList[elementIndex] = newElement;
 
         this.setState({
             currentElement: newElement,
@@ -218,7 +218,7 @@ class App extends React.Component {
                         </Paper>
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={6}>
                         <Paper elevation={3}>
                             <ElementEditor
                                 onChange={this.handleItemChanged}
