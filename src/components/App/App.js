@@ -5,31 +5,38 @@ import AppContent from '../AppContent/AppContent';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import InfoIcon from '@material-ui/icons/Info';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
+import About from '../About/About';
 
 export default function App() {
+    // About
+    const [openAbout, setOpenAbout] = React.useState(false);
+
+    const handleOpenAbout = () => {
+        setOpenAbout(true);
+    }
+
+    const handleCloseAbout = () => {
+        setOpenAbout(false);
+    };
+
+    // Preferences
+
+    const handleOpenPreferences = () => {
+        notify('info', 'Feature in development');
+    };
+
     // Notification
-    const [open, setOpen] = React.useState(false);
+
+    const [openNotification, setOpenNotification] = React.useState(false);
     const [message, setMessage] = React.useState('');
     const [severity, setSeverity] = React.useState('');
-
-    // Speed dial
-
-    const [openMenu, setOpenMenu] = React.useState(false);
-    const speedDialActions = [
-        {
-            key: 'Preferences',
-            icon: '',
-            tooltip: '',
-        },
-        {
-            label: 'About',
-        },
-    ];
 
     const notify = (messageSeverity, messageText) => {
         setSeverity(messageSeverity);
         setMessage(messageText);
-        setOpen(true);
+        setOpenNotification(true);
     };
 
     const handleClose = (event, reason) => {
@@ -37,8 +44,25 @@ export default function App() {
             return;
         }
 
-        setOpen(false);
+        setOpenNotification(false);
     };
+
+    // Speed dial
+
+    const [openMenu, setOpenMenu] = React.useState(false);
+
+    const speedDialActions = [
+        {
+            name: 'Preferences',
+            icon: <FormatListBulletedIcon />,
+            onClick: () => handleOpenPreferences(),
+        },
+        {
+            name: 'About',
+            icon: <InfoIcon />,
+            onClick: () => handleOpenAbout(),
+        },
+    ];
 
     const handleCloseMenu = () => {
         setOpenMenu(false);
@@ -67,16 +91,18 @@ export default function App() {
                 {speedDialActions.map((action) => {
                     return (
                         <SpeedDialAction
-                            key={action.name}
+                            key={action.key}
                             icon={action.icon}
                             tooltipTitle={action.name}
-                            onClick={handleClose}
+                            onClick={action.onClick}
                         />
                     );
                 })}
             </SpeedDial>
 
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <About open={openAbout} onClose={handleCloseAbout} />
+
+            <Snackbar open={openNotification} autoHideDuration={6000} onClose={handleClose}>
                 <Alert
                     elevation={3}
                     variant="filled"

@@ -230,7 +230,7 @@ class AppContent extends React.Component {
                     spacing={3}
                     alignItems="center"
                     justify="center"
-                    style={{ minHeight: '100vh' }}
+                    style={{ minHeight: '100vh', width: '100%' }}
                 >
                     <Grid item xs={3}>
                         <Paper elevation={3}>
