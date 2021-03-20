@@ -2,17 +2,20 @@ import { Container, Divider, Grid, Paper } from '@material-ui/core';
 import React from 'react';
 import ActionButtons from '../ActionButtons/ActionButtons';
 import ElementEditor from '../ElementEditor/ElementEditor';
-import ElementList from '../ElementList/ElementList';
+import ElementTree from '../ElementList/ElementTree';
 import GeneratedText from '../GeneratedText/GeneratedText';
-
+import TreeModel from 'tree-model';
 class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             currentElement: {},
-            elementList: [],
-            elementCount: 0,
+            elementTreeRoot: new TreeModel().parse({
+                id: 0,
+                children: [],
+            }),
+            elementCount: 1,
             profiles: [
                 {
                     name: 'default',
@@ -95,7 +98,7 @@ class App extends React.Component {
             },
         };
 
-        this.addNewItem = this.addNewItem.bind(this);
+        this.addItem = this.addItem.bind(this);
         this.editItem = this.editItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.clearList = this.clearList.bind(this);
@@ -104,19 +107,26 @@ class App extends React.Component {
         this.handleItemChanged = this.handleItemChanged.bind(this);
     }
 
-    addNewItem(simple) {
-        const key = 'New element';
-        const value = simple ? 'Type something...' : [];
-
-        const newElement = {
+    addItem(parentId) {
+        // Create node
+        const newNode = new TreeModel().parse({
             id: this.state.elementCount,
-            key: key,
-            value: value,
-            type: 'complex',
-        };
+            key: `New element ${this.state.elementCount}`,
+            value: 'Empty value',
+            type: 'simple',
+            children: [],
+        });
 
+        // Find parent for the node
+        const parentNode = this.state.elementTreeRoot.first(function (node) {
+            return node.model.id === parentId;
+        });
+
+        // Add element to its parent
+        parentNode.addChild(newNode);
+
+        // Update state
         this.setState((prevState) => ({
-            elementList: [...prevState.elementList, newElement],
             elementCount: prevState.elementCount + 1,
         }));
     }
@@ -144,7 +154,10 @@ class App extends React.Component {
     }
 
     clearList() {
-        this.setState({ elementList: [], currentElement: {} });
+        this.setState({
+            elementTreeRoot: new TreeModel().parse({ id: 0, children: [] }),
+            currentElement: {},
+        });
     }
 
     handleItemChanged(event, id) {
@@ -194,7 +207,7 @@ class App extends React.Component {
                             <Grid container spacing={2} direction="column">
                                 <ActionButtons
                                     elementList={this.elementList}
-                                    addNewItem={this.addNewItem}
+                                    addItem={this.addItem}
                                     clearList={this.clearList}
                                 />
 
@@ -206,8 +219,12 @@ class App extends React.Component {
                                         overflow: 'scroll',
                                     }}
                                 >
-                                    <ElementList
-                                        elementList={this.state.elementList}
+                                    <ElementTree
+                                        id={this.state.elementTreeRoot.model.id}
+                                        children={
+                                            this.state.elementTreeRoot.children
+                                        }
+                                        addItem={this.addItem}
                                         editItem={this.editItem}
                                         deleteItem={this.deleteItem}
                                     />
@@ -218,20 +235,20 @@ class App extends React.Component {
 
                     <Grid item xs={6}>
                         <Paper elevation={3}>
-                            <ElementEditor
+                            {/* <ElementEditor
                                 onChange={this.handleItemChanged}
                                 element={this.state.currentElement}
                                 types={this.state.selectedProfile.types}
-                            />
+                            /> */}
                         </Paper>
                     </Grid>
 
                     <Grid item xs={3}>
                         <Paper>
-                            <GeneratedText
+                            {/* <GeneratedText
                                 profile={this.state.selectedProfile}
                                 elementList={this.state.elementList}
-                            />
+                            /> */}
                         </Paper>
                     </Grid>
                 </Grid>

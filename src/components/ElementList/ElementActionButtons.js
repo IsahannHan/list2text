@@ -6,40 +6,36 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import React from 'react';
 
 export default function ElementActionButtons(props) {
-    const isComplex = props.isComplex;
     const buttons = [
         {
             key: 'Add',
-            element: (
+            icon: (
                 <AddBoxOutlinedIcon
                     fontSize="small"
                     style={{ color: green[500] }}
                 />
             ),
-            action: null,
-            shouldRender: isComplex,
+            action: () => props.addItem(props.id),
         },
         {
             key: 'Edit',
-            element: (
+            icon: (
                 <EditOutlinedIcon
                     fontSize="small"
                     style={{ color: blue[300] }}
                 />
             ),
             action: () => props.editItem(props.element.id),
-            shouldRender: true,
         },
         {
             key: 'Delete',
-            element: (
+            icon: (
                 <DeleteOutlinedIcon
                     fontSize="small"
                     style={{ color: red[300] }}
                 />
             ),
             action: () => props.deleteItem(props.element.id),
-            shouldRender: true,
         },
     ];
 
@@ -48,7 +44,7 @@ export default function ElementActionButtons(props) {
             {buttons.map((button) => {
                 return (
                     <IconButton key={button.key} edge="end" onClick={button.action}>
-                        {button.shouldRender ? button.element : ''}
+                        {button.icon}
                     </IconButton>
                 );
             })}

@@ -27,20 +27,9 @@ export default class ActionButtons extends React.Component {
                             backgroundColor: green[300],
                         }}
                         startIcon={<AddBoxOutlinedIcon />}
-                        onClick={() => this.props.addNewItem(true)}
+                        onClick={() => this.props.addItem(0)}
                     >
-                        Single
-                    </Button>
-
-                    <Button
-                        style={{
-                            color: '#FFFFFF',
-                            backgroundColor: blue[300],
-                        }}
-                        startIcon={<AddBoxOutlinedIcon />}
-                        onClick={() => this.props.addNewItem(false)}
-                    >
-                        List
+                        Add new item
                     </Button>
 
                     <Button
