@@ -10,11 +10,14 @@ import React from 'react';
 
 export default class ElementEditor extends React.Component {
     render() {
-        const id = this.props.element.id;
-        const key = this.props.element.key;
-        const valueIsArray = Array.isArray(this.props.element.value);
-        const value = valueIsArray ? '[LIST INSIDE]' : this.props.element.value;
-        const type = this.props.element.type;
+        if(!this.props.element.model){
+            return <></>;
+        }
+
+        const id = this.props.element.model.id;
+        const key = this.props.element.model.key;
+        const value = this.props.element.model.value
+        const type = this.props.element.model.type;
 
         return (
             <>
@@ -40,7 +43,6 @@ export default class ElementEditor extends React.Component {
                         <TextField
                             name="value"
                             label="Value"
-                            disabled={valueIsArray}
                             onChange={(event) => this.props.onChange(event, id)}
                             value={value || ''}
                             variant="filled"

@@ -25,7 +25,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: blue[300] }}
                 />
             ),
-            action: () => props.editItem(props.element.id),
+            action: () => props.editItem(props.id),
         },
         {
             key: 'Delete',
@@ -35,7 +35,7 @@ export default function ElementActionButtons(props) {
                     style={{ color: red[300] }}
                 />
             ),
-            action: () => props.deleteItem(props.element.id),
+            action: () => props.deleteItem(props.id),
         },
     ];
 

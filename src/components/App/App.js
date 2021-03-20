@@ -10,7 +10,7 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            currentElement: {},
+            currentNode: {},
             elementTreeRoot: new TreeModel().parse({
                 id: 0,
                 children: [],
@@ -104,7 +104,7 @@ class App extends React.Component {
         this.clearList = this.clearList.bind(this);
 
         this.handlePreferenceChange = this.handlePreferenceChange.bind(this);
-        this.handleItemChanged = this.handleItemChanged.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     addItem(parentId) {
@@ -132,25 +132,24 @@ class App extends React.Component {
     }
 
     editItem(id) {
+        const nodeToEdit = this.state.elementTreeRoot.first(function (node) {
+            return node.model.id === id;
+        });
+
         this.setState({
-            currentElement: this.state.elementList.find((e) => e.id === id),
+            currentNode: nodeToEdit,
         });
     }
 
     deleteItem(id) {
-        const element = this.state.elementList.find((e) => e.id === id);
+        // Find node
+        const nodeToDelete = this.state.elementTreeRoot.first(function (node) {
+            return node.model.id === id;
+        });
 
-        if (Array.isArray(element.value)) {
-            element.value = [];
-        }
+        nodeToDelete.drop();
 
-        this.setState((prevState) => ({
-            elementList: prevState.elementList.filter((e) => e.id !== id),
-            currentElement:
-                prevState.currentElement === element
-                    ? {}
-                    : prevState.currentElement,
-        }));
+        this.setState({});
     }
 
     clearList() {
@@ -160,22 +159,19 @@ class App extends React.Component {
         });
     }
 
-    handleItemChanged(event, id) {
-        const element = this.state.elementList.find((e) => e.id === id);
-        const elementIndex = this.state.elementList.findIndex(
-            (e) => e.id === id
-        );
+    onChange(event, id) {
+        let nodeBeingEdited = this.state.elementTreeRoot.first(function (node) {
+            return node.model.id === id;
+        });
 
         const changedField = event.target.name;
         const changedValue = event.target.value;
+        const nodeModel = { ...nodeBeingEdited.model, [changedField]: changedValue };
 
-        const newElement = { ...element, [changedField]: changedValue };
-        const newElementList = this.state.elementList;
-        newElementList[elementIndex] = newElement;
+        nodeBeingEdited.model = nodeModel;
 
         this.setState({
-            currentElement: newElement,
-            elementList: newElementList,
+            currentNode: nodeBeingEdited
         });
     }
 
@@ -235,20 +231,20 @@ class App extends React.Component {
 
                     <Grid item xs={6}>
                         <Paper elevation={3}>
-                            {/* <ElementEditor
-                                onChange={this.handleItemChanged}
-                                element={this.state.currentElement}
+                            <ElementEditor
+                                onChange={this.onChange}
+                                element={this.state.currentNode}
                                 types={this.state.selectedProfile.types}
-                            /> */}
+                            />
                         </Paper>
                     </Grid>
 
                     <Grid item xs={3}>
                         <Paper>
-                            {/* <GeneratedText
+                            <GeneratedText
                                 profile={this.state.selectedProfile}
-                                elementList={this.state.elementList}
-                            /> */}
+                                root={this.state.elementTreeRoot}
+                            />
                         </Paper>
                     </Grid>
                 </Grid>

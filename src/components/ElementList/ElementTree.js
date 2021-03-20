@@ -79,7 +79,6 @@ export default class ElementTree extends React.Component {
         return (
             <ElementActionButtons
                 id={id}
-                parentId={this.props.id}
                 addItem={this.props.addItem}
                 editItem={this.props.editItem}
                 deleteItem={this.props.deleteItem}
