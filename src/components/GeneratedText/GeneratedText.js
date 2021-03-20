@@ -4,7 +4,6 @@ import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import React from 'react';
 
 export default class GeneratedText extends React.Component {
-
     surround(isKey, value, typePreferences) {
         const start = isKey
             ? typePreferences.keyStart
@@ -98,11 +97,11 @@ export default class GeneratedText extends React.Component {
 
     getGeneratedText() {
         return this.props.root.children.size === 0
-        ? 'Generated text will soon appear here...'
-        : this.generateText(
-              this.props.root.children,
-              this.props.profile.nestedLevel
-          );
+            ? 'Generated text will soon appear here...'
+            : this.generateText(
+                  this.props.root.children,
+                  this.props.profile.nestedLevel
+              );
     }
 
     // Utils
@@ -113,9 +112,13 @@ export default class GeneratedText extends React.Component {
         );
     }
 
-    copyToClipboard(event) {
-        const text =  this.getGeneratedText();
+    copyToClipboard() {
+        const text = this.getGeneratedText();
 
+        if (!text) {
+            this.props.notify('warning', 'No text avaliable to copy!');
+            return;
+        }
 
         var dummy = document.createElement('textarea');
         document.body.appendChild(dummy);
@@ -123,39 +126,47 @@ export default class GeneratedText extends React.Component {
         dummy.select();
         document.execCommand('copy');
         document.body.removeChild(dummy);
+
+        this.props.notify(
+            'success',
+            'The generated text has been copied to your clipboard!'
+        );
     }
 
     render() {
-
         return (
             <>
-                <TextField
-                    disabled
-                    id="generated-text"
-                    label="Generated text"
-                    variant="outlined"
-                    multiline
-                    rows={15}
-                    fullWidth={true}
-                    value={this.getGeneratedText()}
-                />
                 <Grid
                     container
+                    direction="row"
                     alignItems="center"
                     justify="center"
-                    className="main-container"
-                    style={{ padding: '5%' }}
+                    spacing={3}
                 >
-                    <Button
-                        style={{
-                            color: '#FFFFFF',
-                            backgroundColor: purple[900],
-                        }}
-                        startIcon={<FileCopyOutlinedIcon />}
-                        onClick={() => this.copyToClipboard()}
-                    >
-                        COPY TO CLIPBOARD
-                    </Button>
+                    <Grid item xs={12}>
+                        <TextField
+                            disabled
+                            id="generated-text"
+                            label="Generated text"
+                            variant="outlined"
+                            multiline
+                            rows={15}
+                            fullWidth={true}
+                            value={this.getGeneratedText()}
+                        />
+                    </Grid>
+                    <Grid item xs={12} align='center'>
+                        <Button
+                            style={{
+                                color: '#FFFFFF',
+                                backgroundColor: purple[900],
+                            }}
+                            startIcon={<FileCopyOutlinedIcon />}
+                            onClick={() => this.copyToClipboard()}
+                        >
+                            COPY TO CLIPBOARD
+                        </Button>
+                    </Grid>
                 </Grid>
             </>
         );
