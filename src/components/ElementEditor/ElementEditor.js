@@ -16,8 +16,8 @@ export default class ElementEditor extends React.Component {
 
         const id = this.props.element.model.id;
         const key = this.props.element.model.key;
-        const value = this.props.element.model.value
         const type = this.props.element.model.type;
+        const value = this.props.element.model.value
 
         return (
             <>
