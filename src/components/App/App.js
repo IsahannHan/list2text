@@ -1,13 +1,18 @@
 import { Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import React from 'react';
-import AppContent from '../AppContent/AppContent';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import InfoIcon from '@material-ui/icons/Info';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
+import InfoIcon from '@material-ui/icons/Info';
+import Alert from '@material-ui/lab/Alert';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import React from 'react';
 import About from '../About/About';
+import AppContent from '../AppContent/AppContent';
+import Preferences from '../Preferences/Preferences';
+import Dialog from '@material-ui/core/Dialog';
+
+import profiles from '../../resources/profiles';
+import { ProfilesProvider } from '../Contexts/ProfilesContext';
 
 export default function App() {
     // About
@@ -15,7 +20,7 @@ export default function App() {
 
     const handleOpenAbout = () => {
         setOpenAbout(true);
-    }
+    };
 
     const handleCloseAbout = () => {
         setOpenAbout(false);
@@ -23,8 +28,14 @@ export default function App() {
 
     // Preferences
 
+    const [openPreferences, setOpenPreferences] = React.useState(false);
+
     const handleOpenPreferences = () => {
-        notify('info', 'Feature in development');
+        setOpenPreferences(true);
+    };
+
+    const handleClosePreferences = () => {
+        setOpenPreferences(false);
     };
 
     // Notification
@@ -72,9 +83,18 @@ export default function App() {
         setOpenMenu(true);
     };
 
+    //
     return (
         <>
-            <AppContent notify={notify} />
+            <ProfilesProvider value = {profiles}>
+                <AppContent notify={notify} />
+
+                <Dialog open={openPreferences} onClose={handleClosePreferences}>
+                    <Preferences />
+                </Dialog>
+            </ProfilesProvider>
+
+            <About open={openAbout} onClose={handleCloseAbout} />
 
             <SpeedDial
                 ariaLabel="SpeedDial example"
@@ -100,9 +120,11 @@ export default function App() {
                 })}
             </SpeedDial>
 
-            <About open={openAbout} onClose={handleCloseAbout} />
-
-            <Snackbar open={openNotification} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar
+                open={openNotification}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
                 <Alert
                     elevation={3}
                     variant="filled"

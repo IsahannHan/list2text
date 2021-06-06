@@ -78,8 +78,6 @@ const MountItem = ({id, name, value, children}) => {
         setOpen(prev  => !prev)
     }, [])
 
-    console.log(value, name)
-
     return (
         <>
             <ListItem key={id}>

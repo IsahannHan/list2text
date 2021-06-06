@@ -2,161 +2,121 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Collapse,
     Grid,
-    IconButton,
     TextField,
+    List,
+    ListItemText,
+    Collapse,
+    ListItem,
+    IconButton,
+    Typography,
+    Tooltip
 } from '@material-ui/core';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import React from 'react';
+import InfoIcon from '@material-ui/icons/Info';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
-export default class Preferences extends React.Component {
-    state = {
-        expanded: false,
+import { useState, useContext } from 'react';
+import ProfilesContext from '../Contexts/ProfilesContext';
+
+const Preferences = (props) => {
+    const profiles = useContext(ProfilesContext);
+    
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen((prevState) => !prevState);
     };
 
-    preferencesFields = [
-        {
-            id: 'simpleKeyStart',
-            type: '',
-            label: 'Simple key start',
-        },
-        {
-            id: 'simpleKeyEnd',
-            type: 'text',
-            label: 'Simple key end',
-        },
-        {
-            id: 'simpleValueStart',
-            type: 'text',
-            label: 'Simple value start',
-        },
-        {
-            id: 'simpleValueEnd',
-            type: 'text',
-            label: 'Simple value end',
-        },
-        {
-            id: 'simpleAssigner',
-            type: 'text',
-            label: 'Simple expression assigner',
-        },
-        {
-            id: 'simpleLineStart',
-            type: 'text',
-            label: 'Simple line start',
-        },
-        {
-            id: 'simpleLineEnd',
-            type: 'text',
-            label: 'Simple line end',
-        },
-        {
-            id: 'complexKeyStart',
-            type: 'text',
-            label: 'Complex key start',
-        },
-        {
-            id: 'complexKeyEnd',
-            type: 'text',
-            label: 'Complex key end',
-        },
-        {
-            id: 'complexValueStart',
-            type: 'text',
-            label: 'Complex value start',
-        },
-        {
-            id: 'complexValueEnd',
-            type: 'text',
-            label: 'Complex value end',
-        },
-        {
-            id: 'complexAssigner',
-            type: 'text',
-            label: 'Complex expression assigner',
-        },
-        {
-            id: 'complexLineStart',
-            type: 'text',
-            label: 'Complex line start',
-        },
-        {
-            id: 'complexLineEnd',
-            type: 'text',
-            label: 'Complex key end',
-        },
-        {
-            id: 'nestedLevel',
-            type: 'number',
-            label: 'Starting nested level',
-        },
-        {
-            id: 'nestedItemStart',
-            type: 'text',
-            label: 'Nested item starting',
-        },
-    ];
+    console.log(profiles);
 
-    handleExpandClick() {
-        this.setState({ expanded: !this.state.expanded });
-    }
-
-    render() {
-
-        return (
-            <Grid container spacing={2} alignItems="center" justify="center">
-                <Grid item xs={12}>
-                    <Card>
-                        <CardHeader
-                            title="Preferences"
-                            action={
-                                <IconButton
-                                    aria-label="settings"
-                                    onClick={() => this.handleExpandClick()}
-                                >
-                                    {this.state.expanded ? (
-                                        <ExpandLessIcon />
-                                    ) : (
-                                        <ExpandMoreIcon />
-                                    )}
-                                </IconButton>
-                            }
-                        />
-                        <Collapse
-                            in={this.state.expanded}
-                            timeout="auto"
-                            unmountOnExit
-                        >
-                            <CardContent>
-                                <Grid
-                                    container
-                                    spacing={3}
-                                    alignItems="flex-start"
-                                    justify="flex-start"
-                                >
-                                    {this.preferencesFields.map((preference) => {
-                                            return (
-                                                <Grid item xs={3} key={preference.id}>
+    return (
+        <Card>
+            <CardHeader title="Preferences" />
+            <CardContent>
+                <Grid
+                    container
+                    spacing={3}
+                    alignItems="flex-start"
+                    justify="flex-start"
+                >
+                    <List>
+                        {profiles.map((profile) => {
+                            return (
+                                <ListItem>
+                                    <IconButton
+                                        onClick={() => handleClick()}
+                                        edge="start"
+                                    >
+                                        {open ? (
+                                            <ExpandLessIcon fontSize="small" />
+                                        ) : (
+                                            <ExpandMoreIcon fontSize="small" />
+                                        )}
+                                    </IconButton>
+                                    <ListItemText
+                                        primary={profile.name}
+                                        secondary={profile.description}
+                                    />
+                                    <Collapse
+                                        in={open}
+                                        timeout="auto"
+                                        unmountOnExit
+                                        style={{ paddingLeft: 15 }}
+                                    >
+                                        {/* {profile.types.map((type) =>
+                                            {Object.keys(type).map((key) => {
+                                                <Grid item xs={3}>
                                                     <TextField
-                                                        id={preference.id}
-                                                        name={preference.id}
-                                                        type={preference.type}
-                                                        label={preference.label}
-                                                        value={this.props.preferences[preference.id]}
-                                                        onChange={this.props.onChange}
+                                                        // id={type.id}
+                                                        // name={type.id}
+                                                        // type={type.type}
+                                                        label={type.type}
                                                     />
-                                                </Grid>
+                                                </Grid>;
+                                            })}
+                                        )} */}
+
+                                        {profile.types.map((type) => {
+                                            return (
+                                                <Card variant="outlined">
+                                                    <Typography variant="h5" component="h2" gutterBottom>
+                                                        {type.name}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="textSecondary" component="p">
+                                                        {type.description}
+                                                    </Typography>
+                                                    <Grid container spacing={3} alignItems="flex-start" justify="flex-start" >
+                                                        {type.preferences.map((preference) => {
+                                                            return (
+                                                                <Grid item xs={3} >
+                                                                    <Grid container spacing={1} alignItems="flex-end">
+                                                                        <Grid item>
+                                                                            <Tooltip title={preference.description}>
+                                                                                <InfoIcon />
+                                                                            </Tooltip>
+                                                                        </Grid>
+                                                                        <Grid item>
+                                                                            <TextField label={preference.name} value={preference.value} />
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            );
+                                                        })}
+                                                    </Grid>
+                                                </Card>
                                             );
-                                        }
-                                    )}
-                                </Grid>
-                            </CardContent>
-                        </Collapse>
-                    </Card>
+                                        })}
+                                    </Collapse>
+                                </ListItem>
+                            );
+                        })}
+                    </List>
                 </Grid>
-            </Grid>
-        );
-    }
-}
+            </CardContent>
+        </Card>
+    );
+};
+
+export default Preferences;

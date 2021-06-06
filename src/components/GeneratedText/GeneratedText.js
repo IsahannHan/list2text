@@ -27,7 +27,7 @@ export default class GeneratedText extends React.Component {
     }
 
     nest(value, nestedLevel) {
-        const nestedItemStart = this.props.profile.nestedItemStart;
+        const nestedItemStart = 'teste';
 
         return nestedItemStart.repeat(nestedLevel) + value;
     }
@@ -73,7 +73,7 @@ export default class GeneratedText extends React.Component {
 
     // Generator
 
-    generateText(childrenList, nestedLevel) {
+    generateText(childrenList) {
         let result = '';
 
         childrenList.forEach((child) => {
@@ -88,7 +88,7 @@ export default class GeneratedText extends React.Component {
                 value,
                 children,
                 typePreferences,
-                nestedLevel
+                0
             );
         });
 
@@ -100,7 +100,6 @@ export default class GeneratedText extends React.Component {
             ? 'Generated text will soon appear here...'
             : this.generateText(
                   this.props.root.children,
-                  this.props.profile.nestedLevel
               );
     }
 
