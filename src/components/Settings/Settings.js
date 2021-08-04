@@ -46,13 +46,6 @@ const Settings = (props) => {
     console.log(profiles);
 
     return (
-        <Grid
-            container
-            spacing={3}
-            alignItems="center"
-            justify="center"
-            style={{ minHeight: '100vh', width: '100%' }}
-        >
             <Card>
                 <CardHeader title="Profiles" />
                 <CardContent>
@@ -168,7 +161,6 @@ const Settings = (props) => {
                     </List>
                 </CardContent>
             </Card>
-        </Grid>
     );
 };
 
