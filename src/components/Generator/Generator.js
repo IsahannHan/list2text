@@ -3,8 +3,8 @@ import React, { useContext, useState, useReducer } from 'react';
 import TreeModel from 'tree-model';
 import ActionButtons from '../ActionButtons/ActionButtons';
 import ElementEditor from './ElementEditor/ElementEditor';
-import ElementTree from '../ElementTree/ElementTree';
-import GeneratedText from '../GeneratedText/GeneratedText';
+import ElementTree from './ElementTree/ElementTree';
+import GeneratedText from './GeneratedText/GeneratedText';
 import { ProfilesContext } from '../Contexts/ProfilesContext';
 
 const Generator = () => {
